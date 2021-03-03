@@ -80,6 +80,22 @@ def processElement(elem, processDict, tabbing):
     elif process is False:
         True  # do nothing!  false means ignore this tag
 
+    elif process == "li":
+        printTabs(tabbing)
+        print("-- ERROR: list elements not supported yet, sorry.")
+
+    elif isinstance(process, dict):
+        printTabs(tabbing)
+        print('["' + elem.tag + '"] = {')
+        for subElem in elem:
+            processElement(subElem, process, tabbing + 1)
+        printTabs(tabbing)
+        print("},")
+
+    elif elem.text is None:
+        printTabs(tabbing)
+        print("--WARNING:", elem.tag, "was processed as", process + ", but was found empty!")
+
     elif process == "str":
         printTabs(tabbing)
         print('["' + elem.tag + '"] = "' + elem.text + '",')
@@ -88,13 +104,8 @@ def processElement(elem, processDict, tabbing):
         printTabs(tabbing)
         print('["' + elem.tag + '"] = ' + elem.text + ',')
 
-    elif isinstance(process, dict):
-        printTabs(tabbing)
-        print('["' + elem.tag + '"] = {')
-        for subElem in elem:
-            processElement(subElem, process, tabbing + 1)
-
     else:
+        printTabs(tabbing)
         print("-- ERROR:", elem.tag, "is set to nonexistent process", process)
 
 
